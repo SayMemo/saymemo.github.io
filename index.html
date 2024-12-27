@@ -1,7 +1,70 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting...</title>
+    <script>
+        // URL에서 쿼리 파라미터 추출 함수
+        function getQueryParams(url) {
+            const queryParams = {};
+            const queryString = url.split('?')[1]; // '?' 이후 문자열 추출
+
+            if (queryString) {
+                queryString.split('&').forEach(param => {
+                    const [key, value] = param.split('=');
+                    queryParams[decodeURIComponent(key)] = decodeURIComponent(value || '');
+                });
+            }
+
+            return queryParams;
+        }
+
+        // GET 파라미터 표시
+        function displayQueryParams() {
+            const fullUrl = window.location.href; // 현재 페이지의 전체 URL
+            const queryParams = getQueryParams(fullUrl);
+
+            // GET 파라미터를 표시
+            let queryOutput = '';
+            for (const [key, value] of Object.entries(queryParams)) {
+                queryOutput += `<p>${key}: ${value}</p>`;
+            }
+
+            // 페이지에 표시
+            document.getElementById('full-url').innerText = fullUrl;
+            document.getElementById('query-params').innerHTML = queryOutput;
+
+            // OAuth 처리
+            const authCode = queryParams['code']; // 'code' 파라미터 추출
+            const error = queryParams['error'];
+
+            if (error) {
+                alert("Error: " + error); // 오류 출력
+            }
+
+            if (authCode) {
+                // saymemo 앱으로 리다이렉트
+                window.location.href = `saymemo://oauth-callback?code=${authCode}`;
+            } else {
+                alert("Authorization code not found.");
+            }
+        }
+
+        // 페이지 로드 시 실행
+        window.onload = displayQueryParams;
+    </script>
+</head>
 <body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages. ^.^</p>
+    <h1>Redirecting...</h1>
+    <p>This page is processing your request. Please wait...</p>
+
+    <!-- 전체 URL 표시 -->
+    <h2>Full URL:</h2>
+    <p id="full-url"></p>
+
+    <!-- GET 파라미터 표시 -->
+    <h2>GET Parameters:</h2>
+    <div id="query-params"></div>
 </body>
 </html>
