@@ -3,16 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="0; url=saymemo://insta-oauth">
     <title>Redirecting...</title>
     <script>
-        // Fallback JavaScript redirect in case meta refresh doesn't work
-        window.onload = function() {
-            window.location.href = "saymemo://insta-oauth";
-        };
+        // URL에서 'code' 파라미터 추출
+        const urlParams = new URLSearchParams(window.location.search);
+        const authCode = urlParams.get('code');
+        
+        if (authCode) {
+            // 앱으로 리디렉션
+            window.location.href = `saymemo://insta-oauth?code=${authCode}`;
+        } else {
+            document.body.innerHTML = "Authorization failed or no code returned.";
+        }
     </script>
 </head>
 <body>
-    <p>If you are not redirected automatically, <a href="saymemo://insta-oauth">click here</a>.</p>
+    <p>Redirecting...</p>
 </body>
 </html>
